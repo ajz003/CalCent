@@ -7,6 +7,10 @@ const port = process.env.PORT || 5000;
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+var user = require('./routes/user')
+
+app.use('/api/user', user)
+
 app.get('/api/hello', (req, res) => {
   res.send({ express: 'Hello From Express' });
 });
