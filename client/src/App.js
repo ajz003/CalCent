@@ -8,6 +8,8 @@ import {
   useParams
 } from "react-router-dom";
 
+import Button from '@material-ui/core/Button';
+
 export default function App() {
   return (
     <Router>
@@ -41,7 +43,13 @@ export default function App() {
 }
 
 function Home() {
-  return <h2>Home</h2>;
+  return (<>
+<h2>Home</h2>
+<Button variant="contained" color="primary">
+      Hello World
+    </Button>
+</>
+  )
 }
 
 function About() {
