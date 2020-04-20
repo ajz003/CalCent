@@ -1,5 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+var path = require('path');
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -14,9 +15,11 @@ if (process.env.NODE_ENV === "production") {
   app.use(express.static("client/build"));
 }
 
-var user = require('./routes/user')
+const db = require('./db')
 
-app.use('/api/user', user)
+var api = require('./routes/api')
+
+app.use('/api', api)
 
 app.get('/api/hello', (req, res) => {
   res.send({ express: 'Hello From Express' });
@@ -35,4 +38,6 @@ app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "./client/build/index.html"));
 });
 
-app.listen(port, () => console.log(`Listening on port ${port}`));
+app.listen(port, () => {
+  console.log(`Listening on port ${port}`)
+});
