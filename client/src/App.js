@@ -9,6 +9,12 @@ import {
 } from "react-router-dom";
 
 import Button from '@material-ui/core/Button';
+import FormControl from '@material-ui/core/FormControl';
+import InputLabel from '@material-ui/core/InputLabel';
+import Input from '@material-ui/core/Input';
+import FormHelperText from '@material-ui/core/FormHelperText';
+
+import Login from "./components/Login"
 
 export default function App() {
   return (
@@ -19,6 +25,9 @@ export default function App() {
             <Link to="/">Home</Link>
           </li>
           <li>
+            <Link to="/login">Login</Link>
+          </li>
+          <li>
             <Link to="/about">About</Link>
           </li>
           <li>
@@ -27,6 +36,9 @@ export default function App() {
         </ul>
 
         <Switch>
+        <Route path="/login">
+            <Login />
+          </Route>
           <Route path="/about">
             <About />
           </Route>

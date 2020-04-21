@@ -1,10 +1,18 @@
-INSERT INTO emp_data (name, age, designation, salary)
-VALUES
-	('Jake', 26, 'Web Developer', 90210);
-	
-INSERT INTO emp_data (name, age, designation, salary)
-VALUES
-	('Joey', 52, 'Accountant', 01209);
-	
-SELECT * FROM emp_data
-	ORDER BY salary;
+CREATE TABLE users (
+	user_id SERIAL PRIMARY KEY,
+	username VARCHAR (50) UNIQUE NOT NULL,
+	password CHAR (60) NOT NULL,
+	email VARCHAR (355) UNIQUE NOT NULL,
+	created_on TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+	last_login TIMESTAMP
+)
+
+CREATE TABLE items (
+	item_id SERIAL PRIMARY KEY,
+	user_id INTEGER REFERENCES users(user_id),
+	name VARCHAR (50) NOT NULL,
+	price INTEGER,
+	calories INTEGER NOT NULL,
+	calories_price_ratio GENERATED ALWAYS AS (CAST (calories as DOUBLE PRECISION) / price) STORED,
+	created_on TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+)
