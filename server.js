@@ -1,9 +1,35 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 var path = require('path');
+var session = require('express-session');
+
+var pg = require('pg')
+  , pgSession = require('connect-pg-simple')(session);
 
 const app = express();
 const port = process.env.PORT || 5000;
+
+const db = require('./db')
+
+var sess = {
+  store: new pgSession({
+    conString: process.env.DATABASE_URL
+  }),
+  secret: 'secret',
+  proxy: true,
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: false }
+  // 30 days
+}
+
+
+if (app.get('env') === 'production') {
+  app.set('trust proxy', 1) // trust first proxy
+  sess.cookie.secure = true // serve secure cookies
+}
+ 
+app.use(session(sess));
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -15,7 +41,6 @@ if (process.env.NODE_ENV === "production") {
   app.use(express.static("client/build"));
 }
 
-const db = require('./db')
 
 var api = require('./routes/api')
 

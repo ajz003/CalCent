@@ -53,7 +53,7 @@ export default class Login extends React.Component {
             username: this.state.loginUsername,
             password: this.state.loginPassword
         }
-        axios.post('/api/users/login', {
+        axios.post('/api/login', {
             user
         })
             .then((response) => {
@@ -61,6 +61,10 @@ export default class Login extends React.Component {
                 if (response.data) {
                     this.setState({
                         status: "Logged in"
+                    }, () => {
+                        setTimeout(() => {
+                            // window.location.href = "/"
+                        }, 2000);
                     })
                 } else {
                     this.setState({

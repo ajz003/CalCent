@@ -32,27 +32,6 @@ router.get('/users', (req, res, next) => {
   })
 })
 
-router.post('/users/login', (req, res, next) => {
-
-          let user = {
-            username: req.body.user.username,
-            password: req.body.user.password
-          }
-          db.query("SELECT password FROM users WHERE username = $1", [user.username], (err, response) => {
-            if (err) {
-              return next(err)
-            }
-            let hash = response.rows[0].password
-            bcrypt.compare(req.body.user.password, hash, function(err, result) {
-              if (result) {
-                res.send(true)
-              } else {
-                res.send(false)
-              }
-            });
-          })
-
-})
 
 router.post('/users', (req, res, next) => {
 
@@ -75,5 +54,60 @@ router.post('/users', (req, res, next) => {
 
 })
 // ... many other routes in this file
+
+
+router.get('/login', (req, res, next) => {
+  if (req.session) {
+    console.log(req.session)
+    res.send(req.session.username)
+  } else {
+    res.send(false)
+  }
+})
+
+router.post('/login', (req, res, next) => {
+
+          let user = {
+            username: req.body.user.username,
+            password: req.body.user.password
+          }
+          db.query("SELECT password FROM users WHERE username = $1", [user.username], (err, response) => {
+            if (err) {
+              return next(err)
+            }
+            if (response.rows[0]) {
+              let hash = response.rows[0].password
+              bcrypt.compare(req.body.user.password, hash, function(err, result) {
+                if (result) {
+                  req.session.loggedin = true;
+                  req.session.username = user.username;
+                  console.log(req.session, 'REQ.SESSIONS')
+                  req.session.save(function(err) {
+                    // session saved
+                    res.sendStatus(200)
+                  })
+                  
+                } else {
+                  res.send(false)
+                }
+              });              
+            } else {
+              res.send(false)
+            }
+
+          })
+})
+
+router.post('/logout', (req, res, next) => {
+
+  if (req.session.loggedin) {
+    req.session.destroy()
+    res.sendStatus(200)
+    
+  } else {
+    res.send(false)
+  }
+})
+
 
 module.exports = router

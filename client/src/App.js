@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState, useEffect } from "react";
 import {
   BrowserRouter as Router,
   Switch,
@@ -9,14 +9,32 @@ import {
 } from "react-router-dom";
 
 import Button from '@material-ui/core/Button';
-import FormControl from '@material-ui/core/FormControl';
-import InputLabel from '@material-ui/core/InputLabel';
-import Input from '@material-ui/core/Input';
-import FormHelperText from '@material-ui/core/FormHelperText';
 
 import Login from "./components/Login"
 
+const axios = require('axios');
+
 export default function App() {
+
+  const [username, setUsername] = useState();
+
+  async function fetchLogin() {
+    const res = await axios.get(`/api/login`)
+    const data = await res
+    console.log(data)
+    setUsername(data.data)
+  }
+
+  async function logout() {
+    const res = await axios.post(`/api/logout`)
+    const data = await res
+    console.log(data)
+  }
+
+  useEffect(() => {
+    fetchLogin()
+  }, [])
+
   return (
     <Router>
       <div>
@@ -34,7 +52,10 @@ export default function App() {
             <Link to="/topics">Topics</Link>
           </li>
         </ul>
-
+        {username && <h3>Welcome, {username}</h3>}
+        <Button variant="contained" color="primary" onClick={logout}>
+      Logout
+    </Button>
         <Switch>
         <Route path="/login">
             <Login />
@@ -55,6 +76,20 @@ export default function App() {
 }
 
 function Home() {
+
+  const [username, setUsername] = useState();
+
+  async function fetchData() {
+    const res = await axios.get(`/api/login`)
+    const data = await res
+    console.log(data)
+    setUsername(data)
+  }
+
+  useEffect(() => {
+    fetchData()
+  }, [])
+
   return (<>
 <h2>Home</h2>
 <Button variant="contained" color="primary">
