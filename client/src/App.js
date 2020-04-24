@@ -1,4 +1,5 @@
 import React, {useState, useEffect } from "react";
+import { makeStyles } from '@material-ui/core/styles';
 import {
   BrowserRouter as Router,
   Switch,
@@ -8,21 +9,59 @@ import {
   useParams
 } from "react-router-dom";
 
+import Home from "./components/Home"
+import TopNav from "./components/TopNav"
+import BottomNav from "./components/BottomNav"
+
 import Button from '@material-ui/core/Button';
 
 import Login from "./components/Login"
 
 const axios = require('axios');
 
+const useStyles = makeStyles((theme) => ({
+  root: {
+    display: 'flex',
+    flexDirection: 'column',
+    minHeight: '100vh',
+  }
+}));
+
+const routes = [
+  {
+    path: "/",
+    exact: true,
+    topnav: () => <TopNav heading="Home" />,
+    main: () => <h2>Home main</h2>
+  },
+  {
+    path: "/login",
+    topnav: () => <TopNav heading="Login" />,
+    main: () => <h2>login</h2>
+  },
+  {
+    path: "/my-list",
+    topnav: () => <TopNav heading="My List" />,
+    main: () => <h2>My List</h2>
+  }
+];
+
 export default function App() {
 
+  const classes = useStyles();
+
   const [username, setUsername] = useState();
+  const [loggedIn, setLoggedIn] = useState("false");
 
   async function fetchLogin() {
     const res = await axios.get(`/api/login`)
     const data = await res
     console.log(data)
     setUsername(data.data)
+    if (data.data) {
+      setLoggedIn("true")      
+    }
+
   }
 
   async function logout() {
@@ -37,66 +76,82 @@ export default function App() {
 
   return (
     <Router>
-      <div>
-        <ul>
-          <li>
-            <Link to="/">Home</Link>
-          </li>
-          <li>
-            <Link to="/login">Login</Link>
-          </li>
-          <li>
-            <Link to="/about">About</Link>
-          </li>
-          <li>
-            <Link to="/topics">Topics</Link>
-          </li>
-        </ul>
-        {username && <h3>Welcome, {username}</h3>}
-        <Button variant="contained" color="primary" onClick={logout}>
-      Logout
-    </Button>
+      <div className={classes.root}>
+        
         <Switch>
-        <Route path="/login">
+            {routes.map((route, index) => (
+              // You can render a <Route> in as many places
+              // as you want in your app. It will render along
+              // with any other <Route>s that also match the URL.
+              // So, a sidebar or breadcrumbs or anything else
+              // that requires you to render multiple things
+              // in multiple places at the same URL is nothing
+              // more than multiple <Route>s.
+              <Route
+                key={index}
+                path={route.path}
+                exact={route.exact}
+                children={<route.topnav />}
+              />
+            ))}
+          </Switch>
+          <p>{loggedIn}</p>
+          <ul style={{ listStyleType: "none", padding: 0 }}>
+            <li>
+              <Link to="/">Home</Link>
+            </li>
+            <li>
+              <Link to="/login">Login</Link>
+            </li>
+            <li>
+              <Link to="/my-list">My List</Link>
+            </li>
+          </ul>
+
+
+          <Switch>
+          <Route exact path="/">
+            <Home />
+          </Route>
+          <Route path="/login">
             <Login />
           </Route>
-          <Route path="/about">
-            <About />
-          </Route>
-          <Route path="/topics">
-            <Topics />
-          </Route>
-          <Route path="/">
+          <Route path="/my-list">
             <Home />
           </Route>
         </Switch>
-      </div>
+
+
+          <Switch>
+            {routes.map((route, index) => (
+              // Render more <Route>s with the same paths as
+              // above, but different components this time.
+              <Route
+                key={index}
+                path={route.path}
+                exact={route.exact}
+                children={<route.main />}
+              />
+            ))}
+          </Switch>
+
+
+          <Switch>
+            {routes.map((route, index) => (
+              // Render more <Route>s with the same paths as
+              // above, but different components this time.
+              <Route
+                key={index}
+                path={route.path}
+                exact={route.exact}
+                children={<route.main />}
+              />
+            ))}
+          </Switch>
+          <BottomNav />
+          </div>
     </Router>
   );
-}
-
-function Home() {
-
-  const [username, setUsername] = useState();
-
-  async function fetchData() {
-    const res = await axios.get(`/api/login`)
-    const data = await res
-    console.log(data)
-    setUsername(data)
-  }
-
-  useEffect(() => {
-    fetchData()
-  }, [])
-
-  return (<>
-<h2>Home</h2>
-<Button variant="contained" color="primary">
-      Hello World
-    </Button>
-</>
-  )
 }
 
 function About() {

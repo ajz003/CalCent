@@ -62,9 +62,7 @@ export default class Login extends React.Component {
                     this.setState({
                         status: "Logged in"
                     }, () => {
-                        setTimeout(() => {
-                            // window.location.href = "/"
-                        }, 2000);
+                            window.location.href = "/"
                     })
                 } else {
                     this.setState({
