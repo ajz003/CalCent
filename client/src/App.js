@@ -13,6 +13,8 @@ import Home from "./components/Home"
 import TopNav from "./components/TopNav"
 import BottomNav from "./components/BottomNav"
 
+import Container from '@material-ui/core/Container';
+import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
 
 import Login from "./components/Login"
@@ -77,7 +79,6 @@ export default function App() {
   return (
     <Router>
       <div className={classes.root}>
-        
         <Switch>
             {routes.map((route, index) => (
               // You can render a <Route> in as many places
@@ -95,18 +96,21 @@ export default function App() {
               />
             ))}
           </Switch>
-          <p>{loggedIn}</p>
-          <ul style={{ listStyleType: "none", padding: 0 }}>
-            <li>
-              <Link to="/">Home</Link>
-            </li>
-            <li>
-              <Link to="/login">Login</Link>
-            </li>
-            <li>
-              <Link to="/my-list">My List</Link>
-            </li>
-          </ul>
+          <Container maxWidth="lg">
+          {/* <Box>
+            <p>{loggedIn}</p>
+            <ul style={{ listStyleType: "none", padding: 0 }}>
+              <li>
+                <Link to="/">Home</Link>
+              </li>
+              <li>
+                <Link to="/login">Login</Link>
+              </li>
+              <li>
+                <Link to="/my-list">My List</Link>
+              </li>
+            </ul>
+          </Box> */}
 
 
           <Switch>
@@ -148,7 +152,9 @@ export default function App() {
               />
             ))}
           </Switch>
+          </Container>
           <BottomNav />
+
           </div>
     </Router>
   );

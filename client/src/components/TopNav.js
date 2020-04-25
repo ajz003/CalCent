@@ -18,12 +18,25 @@ import Button from '@material-ui/core/Button';
 import MenuIcon from '@material-ui/icons/Menu';
 
 const useStyles = makeStyles((theme) => ({
+    appBar: {
+      position: "relative"
+    },
+    toolBar: {
+      justifyContent: "space-between",
+      height: "68px"
+    },
     menuButton: {
-      marginRight: theme.spacing(2),
+      marginRight: theme.spacing(0),
     },
     title: {
       flexGrow: 1,
-    },
+      textAlign: "center",
+      position: "absolute",
+      left: "50%",
+      top: "50%",
+      transform: "translate(-50%, -50%)",
+      color: "#BEAC46"
+    }
   }));
 
 export default function TopNav(props) {
@@ -34,15 +47,14 @@ export default function TopNav(props) {
 
     return (
         <div>
-        <AppBar position="fixed">
-          <Toolbar>
+        <AppBar position="fixed" className={classes.appBar}>
+          <Toolbar className={classes.toolBar}>
             <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
               <MenuIcon />
             </IconButton>
-            <Typography variant="h6" className={classes.title}>
-              {props.heading}
+            <Typography variant="h4" component="h2" className={classes.title}>
+              CalCent
             </Typography>
-            <Button component={Link} to="/login" color="inherit">Login</Button>
           </Toolbar>
         </AppBar>
         <Toolbar />
